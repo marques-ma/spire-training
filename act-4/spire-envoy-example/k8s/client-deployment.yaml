@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client-app
+  template:
+    metadata:
+      labels:
+        app: client-app
+    spec:
+      containers:
+      - name: client-app
+        image: client-app:latest
+        imagePullPolicy: Never
+        env:
+        - name: SERVER_URL
+          value: http://server-app:8080
+      - name: envoy
+        image: envoyproxy/envoy:v1.25-latest
+        args: ["-c", "/etc/envoy/envoy-bootstrap-client.yaml"]
+        volumeMounts:
+        - name: envoy-config
+          mountPath: /etc/envoy
+        - name: spire-socket
+          mountPath: /run/spire/sockets
+      volumes:
+      - name: envoy-config
+        configMap:
+          name: envoy-bootstrap-client
+      - name: spire-socket
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-app
+spec:
+  selector:
+    app: client-app
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080

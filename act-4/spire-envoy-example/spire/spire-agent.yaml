@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: spire-agent
+  namespace: spire
+spec:
+  selector:
+    matchLabels:
+      app: spire-agent
+  template:
+    metadata:
+      labels:
+        app: spire-agent
+    spec:
+      serviceAccountName: spire-agent
+      containers:
+        - name: spire-agent
+          image: ghcr.io/spiffe/spire-agent:1.7.0
+          args: ["-config", "/run/spire/config/agent.conf"]
+          volumeMounts:
+            - name: agent-config
+              mountPath: /run/spire/config
+            - name: sockets
+              mountPath: /run/spire/sockets
+      volumes:
+        - name: agent-config
+          configMap:
+            name: spire-agent-config
+        - name: sockets
+          emptyDir: {}

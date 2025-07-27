@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: client-app
+  namespace: spire
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: client
+        image: client-app:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: spire-agent-socket
+          mountPath: /run/spire/sockets/agent.sock
+      volumes:
+      - name: spire-agent-socket
+        hostPath:
+          path: /run/spire/sockets/agent.sock
+          type: Socket

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-app
+  namespace: spire
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server-app
+  template:
+    metadata:
+      labels:
+        app: server-app
+    spec:
+      containers:
+      - name: server
+        image: server-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8443
+        volumeMounts:
+        - name: spire-agent-socket
+          mountPath: /run/spire/sockets/agent.sock
+          subPath: spire-agent.sock
+      volumes:
+      - name: spire-agent-socket
+        hostPath:
+          path: /run/spire/sockets/agent.sock
+          type: Socket

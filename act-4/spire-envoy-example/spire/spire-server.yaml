@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spire-server
+  namespace: spire
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spire-server
+  template:
+    metadata:
+      labels:
+        app: spire-server
+    spec:
+      containers:
+        - name: spire-server
+          image: ghcr.io/spiffe/spire-server:1.7.0
+          args: ["-config", "/run/spire/config/server.conf"]
+          volumeMounts:
+            - name: spire-config
+              mountPath: /run/spire/config
+      volumes:
+        - name: spire-config
+          configMap:
+            name: spire-server-config
