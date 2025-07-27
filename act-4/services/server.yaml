@@ -6,6 +6,7 @@ spec:
   selector:
     app: server-app
   ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+    - name: http-alt
+      protocol: TCP
+      port: 8282
+      targetPort: 8282

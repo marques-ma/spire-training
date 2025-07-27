@@ -12,9 +12,35 @@ spec:
       labels:
         app: server-app
     spec:
+      serviceAccountName: server-envoy
       containers:
-        - name: server
-          image: server-app:latest
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 8080
+      - name: server
+        image: server-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8888
+      - name: envoy
+        image: envoyproxy/envoy:v1.29-latest
+        ports:
+          - containerPort: 8282
+        args:
+        - "-c"
+        - "/etc/envoy/envoy.yaml"
+        - "--base-id"
+        - "1"
+        - "--log-level"
+        - "debug"
+        volumeMounts:
+        - name: envoy-config
+          mountPath: /etc/envoy
+        - name: spire-agent-socket
+          mountPath: /run/spire/sockets
+          readOnly: true
+      volumes:
+      - name: envoy-config
+        configMap:
+          name: server-envoy-config  # você deve criar esse ConfigMap separadamente
+      - name: spire-agent-socket
+        hostPath:
+          path: /run/spire/sockets
+          type: DirectoryOrCreate

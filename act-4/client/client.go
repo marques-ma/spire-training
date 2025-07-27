@@ -9,8 +9,8 @@ import (
 )
 
 func main() {
-	// The server sidecar will expose on localhost:8080
-	url := "http://server-app:8080/hello"
+	// The server sidecar will expose on localhost:8282
+	url := "http://127.0.0.1:8282/hello"
 	if u := os.Getenv("SERVER_URL"); u != "" {
 		url = u
 	}

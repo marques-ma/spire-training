@@ -12,7 +12,7 @@ func main() {
 		fmt.Fprintln(w, "Hello from payment system!")
 	})
 
-	addr := "0.0.0.0:8080"
+	addr := "0.0.0.0:8888"
 	log.Printf("Legacy payment server listening on %s", addr)
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatalf("Server error: %v", err)

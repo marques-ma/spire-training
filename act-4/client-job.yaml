@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: client-job
+spec:
+  template:
+    spec:
+      serviceAccountName: client-envoy
+      containers:
+      - name: client
+        image: client-app:latest
+        env:
+        - name: SERVER_URL
+          value: http://127.0.0.1:8282/hello
+      restartPolicy: Never
+  backoffLimit: 1
