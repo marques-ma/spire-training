@@ -1,16 +1,53 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: client-job
+  name: client-app
+  namespace: default
 spec:
+  backoffLimit: 0
   template:
+    metadata:
+      labels:
+        app: client-app
     spec:
       serviceAccountName: client-envoy
+      restartPolicy: Never
       containers:
+      - name: envoy
+        image: envoyproxy/envoy:v1.29.12
+        args:
+          - "-c"
+          - "/etc/envoy/envoy.yaml"
+          - "--base-id"
+          - "1"
+          - "--log-level"
+          - "debug"
+        volumeMounts:
+          - name: envoy-config
+            mountPath: /etc/envoy
+          - name: spire-agent-socket
+            mountPath: /run/spire/sockets
+            readOnly: true
+
       - name: client
         image: client-app:latest
+        imagePullPolicy: IfNotPresent
+        command: ["sh", "-c"]
+        args:
+          - |
+            echo "Waiting for Envoy…";
+            sleep 3;
+            echo "Running client";
+            exec /usr/local/bin/client-app
         env:
-        - name: SERVER_URL
-          value: http://127.0.0.1:8282/hello
-      restartPolicy: Never
-  backoffLimit: 1
+          - name: SERVER_URL
+            value: http://127.0.0.1:8282/hello
+
+      volumes:
+      - name: envoy-config
+        configMap:
+          name: client-envoy-config
+      - name: spire-agent-socket
+        hostPath:
+          path: /run/spire/sockets
+          type: DirectoryOrCreate
