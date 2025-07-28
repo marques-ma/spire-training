@@ -20,19 +20,15 @@ This guide walks you through setting up a SPIRE demo environment on `kind`, with
 ### 1. Start the Kind cluster
 
 ```bash
-kind create cluster --name spire-demo
+kind create cluster
 ```
 
 ---
 
 ### 2. Deploy SPIRE server and agent
 
-Deploy SPIRE components in the `spire` namespace:
+Deploy SPIRE components in the `spire` namespace, as detailed in Activity 2.
 
-```bash
-kubectl create namespace spire
-kubectl apply -k spire-setup
-```
 
 ---
 
