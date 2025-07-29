@@ -30,11 +30,11 @@ kind load docker-image client-app:latest
 
 PS: Fetch the ParentID from your spire-server entry show
 ```bash
-kubectl exec -n spire spire-server-0 -- /opt/spire/bin/spire-server entry create   -spiffeID spiffe://neutrino.org/server   -parentID spiffe://neutrino.org/spire/agent/k8s_psat/demo-cluster/899c8ca3-78f0-4825-8a3e-279ce0f21f79   -selector k8s:pod-label:app:server-app   -selector k8s:ns:spire
+kubectl exec -n spire spire-server-0 -- /opt/spire/bin/spire-server entry create   -spiffeID spiffe://neutrino.org/server   -parentID spiffe://neutrino.org/spire/agent/k8s_psat/demo-cluster/899c8ca3-78f0-4825-8a3e-279ce0f21f79   -selector k8s:pod-label:app:server-app   -selector k8s:ns:default
 ```
 
 ```bash
-kubectl exec -n spire spire-server-0 -- /opt/spire/bin/spire-server entry create   -spiffeID spiffe://neutrino.org/client   -parentID spiffe://neutrino.org/spire/agent/k8s_psat/demo-cluster/899c8ca3-78f0-4825-8a3e-279ce0f21f79   -selector k8s:pod-label:app:client-app   -selector k8s:ns:spire
+kubectl exec -n spire spire-server-0 -- /opt/spire/bin/spire-server entry create   -spiffeID spiffe://neutrino.org/client   -parentID spiffe://neutrino.org/spire/agent/k8s_psat/demo-cluster/899c8ca3-78f0-4825-8a3e-279ce0f21f79   -selector k8s:pod-label:app:client-app   -selector k8s:ns:default
 ```
 
 4. Deploy:
