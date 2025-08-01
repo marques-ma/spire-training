@@ -10,10 +10,10 @@ docker image rm -f server-app:latest || true
 echo "📦 Building Docker images..."
 
 # Build client
-docker build -t client-app:latest -f client/Dockerfile ./client
+docker build --no-cache -t client-app:latest -f client/Dockerfile ./client
 
 # Build server
-docker build -t server-app:latest -f server/Dockerfile ./server
+docker build --no-cache -t server-app:latest -f server/Dockerfile ./server
 
 echo "📤 Loading images into the Kind cluster..."
 
@@ -51,13 +51,13 @@ kubectl exec -n spire spire-server-0 -- /opt/spire/bin/spire-server entry create
   -parentID "$AGENT_SPIFFE_ID" \
   -spiffeID spiffe://neutrino.org/ns/default/sa/server-envoy \
   -selector k8s:ns:default \
-  -selector k8s:sa:server-envoy
+  -selector k8s:sa:server-envoy || true
 
 kubectl exec -n spire spire-server-0 -- /opt/spire/bin/spire-server entry create \
   -parentID "$AGENT_SPIFFE_ID" \
   -spiffeID spiffe://neutrino.org/ns/default/sa/client-envoy \
   -selector k8s:ns:default \
-  -selector k8s:sa:client-envoy
+  -selector k8s:sa:client-envoy || true
 
 echo "✅ Registration entries created successfully."
 

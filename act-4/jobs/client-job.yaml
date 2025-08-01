@@ -36,7 +36,7 @@ spec:
         args:
           - |
             echo "Waiting for Envoy…";
-            sleep 3;
+            sleep 10;
             echo "Running client";
             exec /usr/local/bin/client-app
         env:
